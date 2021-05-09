@@ -1,0 +1,907 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title> To-Do List</title>
+<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+<style>
+/* basic reset */
+
+
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* app */
+
+html { font-size: 100%; }
+
+body {
+  background: #b1f6cb;
+  background-image: url(http://i1367.photobucket.com/albums/r792/acochran89/congruent_pentagon_zps6e6b49bf.png);
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* super basic grid structure */
+
+.container {
+  width: 600px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 20px 0;
+  -webkit-box-shadow: 0 0 2px rgba(0,0,0,0.2);
+  box-shadow: 0 0 2px rgba(0,0,0,0.2);
+}
+
+.row {
+  display: block;
+  padding: 10px;
+  text-align: center;
+  width: 100%;
+  clear: both;
+  overflow: hidden;
+}
+
+.half {
+  width: 50%;
+  float: left;
+}
+
+.content { background: #fff; }
+
+/* logo */
+
+h1 {
+  font-family: 'Rokkitt', sans-serif;
+  color: #666;
+  text-align: center;
+  font-weight: 400;
+  margin: 0;
+}
+
+.tagline {
+  margin-top: -10px;
+  text-align: center;
+  padding: 5px 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #777;
+}
+
+/* inputs */
+
+.inputContainer {
+  height: 60px;
+  border-top: 1px solid #e5e5e5;
+  position: relative;
+  overflow: hidden;
+}
+
+.inputContainer.last {
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 20px;
+}
+
+.inputContainer.half.last.right { border-left: 1px solid #efefef; }
+
+input[type="date"],
+input[type="text"],
+select {
+  height: 100%;
+  width: 100%;
+  padding: 0 20px;
+  position: absolute;
+  top: 0;
+  vertical-align: middle;
+  display: inline-block;
+  border: none;
+  border-radius: none;
+  font-size: 13px;
+  color: #777;
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  -webkit-transition: background 0.3s;
+  transition: background 0.3s;
+}
+
+input[type="date"] { cursor: pointer; }
+
+input[type="date"]:focus,
+input[type="text"]:focus,
+select:focus {
+  outline: none;
+  background: #ecf0f1;
+}
+
+::-webkit-input-placeholder {
+ color: lightgrey;
+ font-weight: normal;
+ -webkit-transition: all 0.3s;
+ transition: all 0.3s;
+}
+::-moz-placeholder {
+ color: lightgrey;
+ font-weight: normal;
+ transition: all 0.3s;
+}
+::-ms-input-placeholder {
+ color: lightgrey;
+ font-weight: normal;
+ transition: all 0.3s;
+}
+input:-moz-placeholder {
+ color: lightgrey;
+ font-weight: normal;
+ transition: all 0.3s;
+}
+ input:focus::-webkit-input-placeholder {
+ color: #95a5a6;
+ font-weight: bold;
+}
+ input:focus::-moz-input-placeholder {
+ color: #95a5a6;
+ font-weight: bold;
+}
+
+label {
+  padding: 5px 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #777;
+  display: block;
+  position: absolute;
+}
+
+button {
+  font-family: 'Open Sans', sans-serif;
+  background: transparent;
+  border-radius: 2px;
+  border: none;
+  outline: none;
+  height: 50px;
+  width: 150px;
+  font-size: 1em;
+  color: #fff;
+  cursor: pointer;
+  text-transform: uppercase;
+  position: relative;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.icon {
+  position: absolute;
+  top: 30%;
+  left: 10px;
+  font-size: 20px;
+}
+
+.taskAdd {
+  background: #444;
+  padding-left: 15px;
+}
+
+.taskAdd:hover { background: #303030; }
+
+.taskDelete {
+  background: #e74c3c;
+  padding-left: 30px;
+}
+
+.taskDelete:hover { background: #c0392b; }
+
+/* task styles */
+
+.taskList {
+  list-style: none;
+  padding: 0 20px;
+}
+
+.taskItem {
+  border-top: 1px solid #e5e5e5;
+  padding: 15px 0;
+  color: #777;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+.taskList .taskItem:nth-child(even) { background: #fcfcfc; }
+
+.taskCheckbox { margin-right: 1em; }
+
+.complete-true {
+  text-decoration: line-through;
+  color: #bebebe;
+}
+
+.taskList .taskDate {
+  color: #95a5a6;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  display: block;
+  margin-left: 41px;
+}
+
+.fa-calendar {
+  margin-right: 10px;
+  font-size: 16px;
+}
+ [class*='category-'] {
+ display: inline-block;
+ font-size: 10px;
+ background: #444;
+ vertical-align: middle;
+ color: #fff;
+ padding: 10px;
+ width: 75px;
+ text-align: center;
+ border-radius: 2px;
+ float: right;
+ font-weight: normal;
+ text-transform: uppercase;
+ margin-right: 20px;
+}
+
+.category- { background: transparent; }
+
+.category-Personal { background: #2980b9; }
+
+.category-Work { background: #8e44ad; }
+
+.category-School { background: #f39c12; }
+
+.category-Cleaning { background: #16a085; }
+
+.category-Other { background: #d35400; }
+
+footer {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #777;
+}
+
+footer a { color: #f39c12; }
+
+/* custom checkboxes */
+
+.taskCheckbox {
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  display: inline-block;
+  cursor: pointer;
+  width: 19px;
+  height: 19px;
+  vertical-align: middle;
+}
+
+.taskCheckbox:focus { outline: none; }
+
+.taskCheckbox:before,
+.taskCheckbox:checked:before {
+  font-family: 'FontAwesome';
+  color: #444;
+  font-size: 20px;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.taskCheckbox:before { content: '\f096'; }
+
+.taskCheckbox:checked:before {
+  content: '\f14a';
+  color: #16a085;
+}
+
+/* custom select menu */
+
+.taskCategory {
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  padding-left: 16.5px; /*specific positioning due to difficult behavior of select element*/
+  background: #fff;
+}
+
+.selectArrow {
+  position: absolute;
+  z-index: 10;
+  top: 35%;
+  right: 0;
+  margin-right: 20px;
+  color: #777;
+  pointer-events: none;
+}
+
+.taskCategory option {
+  background: #fff;
+  border: none;
+  outline: none;
+  padding: 0 100px;
+}
+</style>
+<link href="http://www.cssscript.com/wp-includes/css/sticky.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+</script> 
+      <script type="text/javascript"
+src="//pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></div>
+    <div class="css-script-clear"></div>
+  </div>
+</div>
+<div ng-app="TaskManager" style="margin-top:150px;">
+  <div class="container">
+    <div class="content" ng-controller="taskController">
+      <h1>To-Do List</h1>
+      <p class="tagline">By Aaron</p>
+      <form>
+        <div class="inputContainer">
+          <input type="text" id="description" class="taskName" placeholder="What do you need to do?" ng-model="newTask">
+          <label for="description">Description</label>
+        </div>
+        <div class="inputContainer half last"> <i class="fa fa-caret-down selectArrow"></i>
+          <select id="category" class="taskCategory" ng-model="newTaskCategory" ng-options="obj.name for obj in categories">
+            <option class="disabled" value="">Choose a category</option>
+          </select>
+          <label for="category">Category</label>
+        </div>
+        <div class="inputContainer half last right">
+          <input type="date" id="dueDate" class="taskDate" ng-model="newTaskDate">
+          <label for="dueDate">Due Date</label>
+        </div>
+        <div class="row">
+          <button class="taskAdd" ng-click="addNew()"><i class="fa fa-plus icon"></i>Add task</button>
+          <button class="taskDelete" ng-click="deleteTask()"><i class="fa fa-trash-o icon"></i>Delete Tasks</button>
+        </div>
+      </form>
+      <ul  class="taskList">
+        <li class="taskItem" ng-repeat="taskItem in taskItem track by $index" ng-model="taskItem">
+          <input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="save()">
+          <span class="complete-{{taskItem.complete}}">{{taskItem.description}}</span> <span class="category-{{taskItem.category}}">{{taskItem.category}}</span> <strong class="taskDate complete-{{taskItem.complete}}"><i class="fa fa-calendar"></i>{{taskItem.date | date : 'mediumDate'}}</strong> </li>
+      </ul>
+      <!-- taskList --> 
+    </div>
+    <!-- content --> 
+  </div>
+  <!-- container --> 
+</div>
+<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js'></script>
+<script>
+//Define angular app
+var app = angular.module('TaskManager', []); 
+
+//controllers
+app.controller('taskController', function($scope) {
+    $scope.today = new Date();
+    $scope.saved = localStorage.getItem('taskItems');
+    $scope.taskItem = (localStorage.getItem('taskItems')!==null) ? 
+    JSON.parse($scope.saved) : [ {description: "Why not add a task?", date: $scope.today, complete: false}];
+    localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+    
+    $scope.newTask = null;
+    $scope.newTaskDate = null;
+    $scope.categories = [
+        {name: 'Personal'},
+        {name: 'Work'},
+        {name: 'School'},
+        {name: 'Cleaning'},
+        {name: 'Other'}
+    ];
+    $scope.newTaskCategory = $scope.categories;
+    $scope.addNew = function () {
+        if ($scope.newTaskDate == null || $scope.newTaskDate == '') {
+            $scope.taskItem.push({
+                description: $scope.newTask,
+                date: "No deadline",
+                complete: false,
+                category: $scope.newTaskCategory.name
+            }) 
+        } else {
+            $scope.taskItem.push({
+                description: $scope.newTask,
+                date: $scope.newTaskDate,
+                complete: false,
+                category: $scope.newTaskCategory.name
+            })
+        };
+        $scope.newTask = '';
+        $scope.newTaskDate = '';
+        $scope.newTaskCategory = $scope.categories;
+        localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+    };
+    $scope.deleteTask = function () {
+        var completedTask = $scope.taskItem;
+        $scope.taskItem = [];
+        angular.forEach(completedTask, function (taskItem) {
+            if (!taskItem.complete) {
+                $scope.taskItem.push(taskItem);
+            }
+        });
+        localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+    };
+    
+    $scope.save = function () {
+        localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+    }
+});
+</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46156385-1', 'cssscript.com');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html><!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title> To-Do List</title>
+<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+<style>
+/* basic reset */
+
+
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* app */
+
+html { font-size: 100%; }
+
+body {
+  background: #b1f6cb;
+  background-image: url(http://i1367.photobucket.com/albums/r792/acochran89/congruent_pentagon_zps6e6b49bf.png);
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* super basic grid structure */
+
+.container {
+  width: 600px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 20px 0;
+  -webkit-box-shadow: 0 0 2px rgba(0,0,0,0.2);
+  box-shadow: 0 0 2px rgba(0,0,0,0.2);
+}
+
+.row {
+  display: block;
+  padding: 10px;
+  text-align: center;
+  width: 100%;
+  clear: both;
+  overflow: hidden;
+}
+
+.half {
+  width: 50%;
+  float: left;
+}
+
+.content { background: #fff; }
+
+/* logo */
+
+h1 {
+  font-family: 'Rokkitt', sans-serif;
+  color: #666;
+  text-align: center;
+  font-weight: 400;
+  margin: 0;
+}
+
+.tagline {
+  margin-top: -10px;
+  text-align: center;
+  padding: 5px 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #777;
+}
+
+/* inputs */
+
+.inputContainer {
+  height: 60px;
+  border-top: 1px solid #e5e5e5;
+  position: relative;
+  overflow: hidden;
+}
+
+.inputContainer.last {
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 20px;
+}
+
+.inputContainer.half.last.right { border-left: 1px solid #efefef; }
+
+input[type="date"],
+input[type="text"],
+select {
+  height: 100%;
+  width: 100%;
+  padding: 0 20px;
+  position: absolute;
+  top: 0;
+  vertical-align: middle;
+  display: inline-block;
+  border: none;
+  border-radius: none;
+  font-size: 13px;
+  color: #777;
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  -webkit-transition: background 0.3s;
+  transition: background 0.3s;
+}
+
+input[type="date"] { cursor: pointer; }
+
+input[type="date"]:focus,
+input[type="text"]:focus,
+select:focus {
+  outline: none;
+  background: #ecf0f1;
+}
+
+::-webkit-input-placeholder {
+ color: lightgrey;
+ font-weight: normal;
+ -webkit-transition: all 0.3s;
+ transition: all 0.3s;
+}
+::-moz-placeholder {
+ color: lightgrey;
+ font-weight: normal;
+ transition: all 0.3s;
+}
+::-ms-input-placeholder {
+ color: lightgrey;
+ font-weight: normal;
+ transition: all 0.3s;
+}
+input:-moz-placeholder {
+ color: lightgrey;
+ font-weight: normal;
+ transition: all 0.3s;
+}
+ input:focus::-webkit-input-placeholder {
+ color: #95a5a6;
+ font-weight: bold;
+}
+ input:focus::-moz-input-placeholder {
+ color: #95a5a6;
+ font-weight: bold;
+}
+
+label {
+  padding: 5px 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #777;
+  display: block;
+  position: absolute;
+}
+
+button {
+  font-family: 'Open Sans', sans-serif;
+  background: transparent;
+  border-radius: 2px;
+  border: none;
+  outline: none;
+  height: 50px;
+  width: 150px;
+  font-size: 1em;
+  color: #fff;
+  cursor: pointer;
+  text-transform: uppercase;
+  position: relative;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.icon {
+  position: absolute;
+  top: 30%;
+  left: 10px;
+  font-size: 20px;
+}
+
+.taskAdd {
+  background: #444;
+  padding-left: 15px;
+}
+
+.taskAdd:hover { background: #303030; }
+
+.taskDelete {
+  background: #e74c3c;
+  padding-left: 30px;
+}
+
+.taskDelete:hover { background: #c0392b; }
+
+/* task styles */
+
+.taskList {
+  list-style: none;
+  padding: 0 20px;
+}
+
+.taskItem {
+  border-top: 1px solid #e5e5e5;
+  padding: 15px 0;
+  color: #777;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+.taskList .taskItem:nth-child(even) { background: #fcfcfc; }
+
+.taskCheckbox { margin-right: 1em; }
+
+.complete-true {
+  text-decoration: line-through;
+  color: #bebebe;
+}
+
+.taskList .taskDate {
+  color: #95a5a6;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  display: block;
+  margin-left: 41px;
+}
+
+.fa-calendar {
+  margin-right: 10px;
+  font-size: 16px;
+}
+ [class*='category-'] {
+ display: inline-block;
+ font-size: 10px;
+ background: #444;
+ vertical-align: middle;
+ color: #fff;
+ padding: 10px;
+ width: 75px;
+ text-align: center;
+ border-radius: 2px;
+ float: right;
+ font-weight: normal;
+ text-transform: uppercase;
+ margin-right: 20px;
+}
+
+.category- { background: transparent; }
+
+.category-Personal { background: #2980b9; }
+
+.category-Work { background: #8e44ad; }
+
+.category-School { background: #f39c12; }
+
+.category-Cleaning { background: #16a085; }
+
+.category-Other { background: #d35400; }
+
+footer {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #777;
+}
+
+footer a { color: #f39c12; }
+
+/* custom checkboxes */
+
+.taskCheckbox {
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  display: inline-block;
+  cursor: pointer;
+  width: 19px;
+  height: 19px;
+  vertical-align: middle;
+}
+
+.taskCheckbox:focus { outline: none; }
+
+.taskCheckbox:before,
+.taskCheckbox:checked:before {
+  font-family: 'FontAwesome';
+  color: #444;
+  font-size: 20px;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.taskCheckbox:before { content: '\f096'; }
+
+.taskCheckbox:checked:before {
+  content: '\f14a';
+  color: #16a085;
+}
+
+/* custom select menu */
+
+.taskCategory {
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  padding-left: 16.5px; /*specific positioning due to difficult behavior of select element*/
+  background: #fff;
+}
+
+.selectArrow {
+  position: absolute;
+  z-index: 10;
+  top: 35%;
+  right: 0;
+  margin-right: 20px;
+  color: #777;
+  pointer-events: none;
+}
+
+.taskCategory option {
+  background: #fff;
+  border: none;
+  outline: none;
+  padding: 0 100px;
+}
+</style>
+<link href="http://www.cssscript.com/wp-includes/css/sticky.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+</script> 
+      <script type="text/javascript"
+src="//pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></div>
+    <div class="css-script-clear"></div>
+  </div>
+</div>
+<div ng-app="TaskManager" style="margin-top:150px;">
+  <div class="container">
+    <div class="content" ng-controller="taskController">
+      <h1>To-Do List</h1>
+      <p class="tagline">By Aaron</p>
+      <form>
+        <div class="inputContainer">
+          <input type="text" id="description" class="taskName" placeholder="What do you need to do?" ng-model="newTask">
+          <label for="description">Description</label>
+        </div>
+        <div class="inputContainer half last"> <i class="fa fa-caret-down selectArrow"></i>
+          <select id="category" class="taskCategory" ng-model="newTaskCategory" ng-options="obj.name for obj in categories">
+            <option class="disabled" value="">Choose a category</option>
+          </select>
+          <label for="category">Category</label>
+        </div>
+        <div class="inputContainer half last right">
+          <input type="date" id="dueDate" class="taskDate" ng-model="newTaskDate">
+          <label for="dueDate">Due Date</label>
+        </div>
+        <div class="row">
+          <button class="taskAdd" ng-click="addNew()"><i class="fa fa-plus icon"></i>Add task</button>
+          <button class="taskDelete" ng-click="deleteTask()"><i class="fa fa-trash-o icon"></i>Delete Tasks</button>
+        </div>
+      </form>
+      <ul  class="taskList">
+        <li class="taskItem" ng-repeat="taskItem in taskItem track by $index" ng-model="taskItem">
+          <input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="save()">
+          <span class="complete-{{taskItem.complete}}">{{taskItem.description}}</span> <span class="category-{{taskItem.category}}">{{taskItem.category}}</span> <strong class="taskDate complete-{{taskItem.complete}}"><i class="fa fa-calendar"></i>{{taskItem.date | date : 'mediumDate'}}</strong> </li>
+      </ul>
+      <!-- taskList --> 
+    </div>
+    <!-- content --> 
+  </div>
+  <!-- container --> 
+</div>
+<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js'></script>
+<script>
+//Define angular app
+var app = angular.module('TaskManager', []); 
+
+//controllers
+app.controller('taskController', function($scope) {
+    $scope.today = new Date();
+    $scope.saved = localStorage.getItem('taskItems');
+    $scope.taskItem = (localStorage.getItem('taskItems')!==null) ? 
+    JSON.parse($scope.saved) : [ {description: "Why not add a task?", date: $scope.today, complete: false}];
+    localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+    
+    $scope.newTask = null;
+    $scope.newTaskDate = null;
+    $scope.categories = [
+        {name: 'Personal'},
+        {name: 'Work'},
+        {name: 'School'},
+        {name: 'Cleaning'},
+        {name: 'Other'}
+    ];
+    $scope.newTaskCategory = $scope.categories;
+    $scope.addNew = function () {
+        if ($scope.newTaskDate == null || $scope.newTaskDate == '') {
+            $scope.taskItem.push({
+                description: $scope.newTask,
+                date: "No deadline",
+                complete: false,
+                category: $scope.newTaskCategory.name
+            }) 
+        } else {
+            $scope.taskItem.push({
+                description: $scope.newTask,
+                date: $scope.newTaskDate,
+                complete: false,
+                category: $scope.newTaskCategory.name
+            })
+        };
+        $scope.newTask = '';
+        $scope.newTaskDate = '';
+        $scope.newTaskCategory = $scope.categories;
+        localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+    };
+    $scope.deleteTask = function () {
+        var completedTask = $scope.taskItem;
+        $scope.taskItem = [];
+        angular.forEach(completedTask, function (taskItem) {
+            if (!taskItem.complete) {
+                $scope.taskItem.push(taskItem);
+            }
+        });
+        localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+    };
+    
+    $scope.save = function () {
+        localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+    }
+});
+</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46156385-1', 'cssscript.com');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
